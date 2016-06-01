@@ -1,0 +1,13 @@
+language: python
+
+env:
+  - "3.3"
+  - "3.4"
+
+install: pip install nose
+
+script:  nosetests
+
+notifications:
+  email: true
+  
