@@ -1,0 +1,5 @@
+name="tagberry",
+version="2.0",
+description='EPC Global/GS1 Encoding Library for Python',
+long_description="Tagberry is a comprehensive Python library for working with EPC Global and GS1 Encodings, such as GTINs, SGTIN-*, SSCC, and all other encodings.",
+url='https://github.com/pypa/sampleproject',
