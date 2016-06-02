@@ -53,18 +53,6 @@ class GSRN96Test(unittest.TestCase):
         print ("====END Test Decoding from Binary Value ====")
         print ("")
        
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***")
-        epc_num = self._gsrn96.encode(self._companyPrefix, 0, self._serviceReference , self._filter, 0)
-        rawUri = epc_num.toEPCRawUri()
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        epc_num = factory.parse(rawUri)
-        self._checkFields(epc_num)
-        print (epc_num.toHex())
-        print (epc_num.toBinary())
-        print ("***==== END Test Decode Raw Uri Value ====***")
-        print ("")
     
     def test_FromHex(self):
         print ("==== Test Decoding from Hex Value ====")
@@ -83,7 +71,7 @@ class GSRN96Test(unittest.TestCase):
         #TagURI=urn:epc:id:sgrn:0358468.202339
         tagUri = "urn:epc:id:gsrn:%s.%s" % (str(self._companyPrefix), str(self._serviceReference))
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         epc = factory.parse(tagUri)
         #Change the filter because the filter is not part filter the pure identity is not available
         #Set the filter to the test's module level filter value
@@ -115,12 +103,6 @@ class GSRN96Test(unittest.TestCase):
         print ("***==== END  Test To EPC Tag Uri Value ====***")
         print ("") 
     
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***")
-        epc = self._gsrn96.encode(self._companyPrefix, 0,self._serviceReference ,self._filter, 0)
-        print (epc.toEPCRawUri())
-        print ("***==== END  Test To EPC Tag Uri Value ====***") 
-        print ("") 
     
     def test_ToGS1(self):
         print ("***==== Test GS1  ====***")
@@ -198,21 +180,19 @@ class GSRN96Test(unittest.TestCase):
         print ("===========================")
         print ("=== Format to JSON ===")
         print (gdti96.format("json"))
-        print ("===========================")
-        print ("=== Format to RAW_URI ==="
-        print (gdti96.format("raw_uRI"))
-        print ("==========================="
-        print ("=== Format to XML ===")
+        
+        
+        
         print (gdti96.format("xml"))
-        print ("===========================")
-        print ("=== Format to DICTIONARY ===")
+        
+        
         f = gdti96.format("DICTIONARY")
         for k, v in f.items():       
             print ("%s=%s\n" % (k, v)
-        print ("===========================")
-        print ("=== Format to gs1 ===")
+        
+        
         print (gdti96.format("gs1"))   
-        print ("===========================")
+        
     
             
     def _checkFields(self,epc):

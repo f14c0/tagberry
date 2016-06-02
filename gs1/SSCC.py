@@ -1,6 +1,6 @@
 import re
 from epcerrors.GS1Exception import GS1Exception 
-from gs1 import GS1Number
+from gs1.GS1Number import GS1Number
 from gs1.Patterns import sscc_patterns
 
 class SSCC(GS1Number):

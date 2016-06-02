@@ -1,8 +1,8 @@
 import unittest
-from encoding.EPCFactory import EPCFactory
-from encoding.GRAI96 import GRAI96
+from epc.EPCFactory import EPCFactory
+from epc.GRAI96 import GRAI96
 from utils.Partitions import Partitions  
-from bitstring import BitArray,BitStream
+from bitstring import BitArray
 class GRAI96Test(unittest.TestCase):
     def setUp(self):
         self._grai96 = GRAI96()
@@ -12,15 +12,12 @@ class GRAI96Test(unittest.TestCase):
         self._serialNumber = 395
         
     def test_Encode(self):
-        print ("==== Test Encode from Hex Value ====")
-        epc = self._grai96.encode(self._companyPrefix, None,self._assetType ,self._filter, self._serialNumber)
-        bits = epc.toBinary()
+       
+        grai96 = self._grai96.encode(self._companyPrefix, None,self._assetType ,self._filter, self._serialNumber)
+        bits = grai96.toBinary()
         self.assertEquals(len(bits),96)
-        self._checkFields(epc)
-        print epc.toBinary()
-        print epc.toHex()
-        print ("====END Test Decoding from Hex Value ====")
-        print ("")
+        self._checkFields(grai96)
+       
         
     def test_ParseHex(self):
         print ("==== Test Decoding from Hex Value ====")
@@ -61,25 +58,12 @@ class GRAI96Test(unittest.TestCase):
         print ("====END Test Decoding from Binary Value ====")
         print ("")
     
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***")
-        epc = self._grai96.encode(self._companyPrefix, None, self._assetType , self._filter, self._serialNumber)
-        rawUri = epc.toEPCRawUri()
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        epc = factory.parse(rawUri)
-        self._checkFields(epc)
-        print epc.toHex()
-        print epc.toBinary()
-        print ("***==== END Test Decode Raw Uri Value ====***")
-        print ("")
-    
     def test_ParseEPCUri(self):
         print ("***==== Test Decode EPC Uri Value ====***")
         #TagURI=urn:tag:id:GRAI:0358468.202339.000395
         tagUri = "urn:tag:id:grai:%s.%s.%s" % (str(self._companyPrefix),self._assetType,self._serialNumber)
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         epc = factory.parse(tagUri)
         #Change the filter because the filter is not part filter the pure identity is not available
         self._filter = 0
@@ -109,12 +93,7 @@ class GRAI96Test(unittest.TestCase):
         print ("***==== END  Test To EPC Tag Uri Value ====***")
         print ("")
     
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***")
-        epc = self._grai96.encode(self._companyPrefix, None,self._assetType ,self._filter, self._serialNumber)
-        print (epc.toEPCRawUri())
-        print ("***==== END  Test To EPC Tag Uri Value ====***") 
-        print ("")
+   
     
     def test_ToGS1(self):
         print ("***==== Test GS1  ====***")
@@ -196,8 +175,6 @@ class GRAI96Test(unittest.TestCase):
         print ("=== Format to JSON ===")
         print (epc.format("json"))
         print ("==========================="
-        print ("=== Format to RAW_URI ==="
-        print (epc.format("raw_uRI"))
         print ("==========================="
         print ("=== Format to DICTIONARY ===")
         f = epc.format("DICTIONARY")

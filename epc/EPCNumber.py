@@ -19,7 +19,8 @@ class EPCNumber(object):
         self._startSerialNumber = startSerialNumber
         self._numOfSerialNumbers = numOfSerialNumbers
         self._fixedSerialNumberLength = fixedSerialNumberLength
-        self._serailNumber
+        self._fixedGS1SerialNumberLength = 0
+        self._serialNumber=0
     
     class Meta:
         """
@@ -87,6 +88,28 @@ class EPCNumber(object):
     fieldDictionary = property(getFieldDictionary) 
     
     @property 
+    def fixedGS1SerialNumberLength(self):
+        """
+        Gets the Fixed Serial Number Length for a GS1 Encoding.
+        
+        Description:
+            The Fixed Serial Number Length is only required when a fixed serial number length is required.
+            If the value of Fixed Serial Number is zero (0), then tagberry will assume that no fixed serial
+            number is required.
+            
+            
+        Returns:
+            int : the fixed serial number length
+         
+        """
+        return self._fixedGS1SerialNumberLength
+    
+    
+    @fixedGS1SerialNumberLength.setter  
+    def fixedGS1SerialNumberLength(self, value):
+        return self._fixedGS1SerialNumberLength
+    
+    @property 
     def fixedSerialNumberLength(self):
         """
         Gets the Fixed Serial Number Length.
@@ -107,28 +130,9 @@ class EPCNumber(object):
     
     @fixedSerialNumberLength.setter 
     def fixedSerialNumberLength(self, value):
-        """
-        Gets the Fixed Serial Number Length.
-        
-        Args:
-            value (int): The fixed-length of the serial number. 
-        
-        Description:
-            The Fixed Serial Number Length is only required when a fixed serial number length is required.
-            If the value of Fixed Serial Number is zero (0), then tagberry will assume that no fixed serial
-            number is required.
-            
-            However, if this number is set to a value greater than zero (0) tagberry will apply the
-            rules in the Tag Data Specification 1.9 to the serial number. 
-        
-        Returns:
-            int : the fixed serial number length
-        
-        """
         self._fixedSerialNumberLength = value 
     
      
-    
     
     @property 
     def serialnumber(self, value):
@@ -144,7 +148,7 @@ class EPCNumber(object):
             int: The current serial number for the encoding
         
         '''
-        return self.getFieldValue("SerialNumber")
+        raise NotImplemented("The serialnumber getter is not implemented")
         
       
     @serialnumber.setter 
@@ -177,11 +181,6 @@ class EPCNumber(object):
     def toURI(self):
         '''Override in derived class'''
     
-    def toRawURI(self):
-        '''Returns the <ENCODING> in an EPC Raw URI Representation'''
-        epcUri = "urn:tagpy:raw:96.x%s" % (self.toHex())
-        return epcUri
-    
     @abstract
     def fromURI(self, uri):
         '''Override in derived class. Parses the EPC from a TagURI'''
@@ -189,19 +188,15 @@ class EPCNumber(object):
     def fromTagURI(self, uri):
         '''Parses the EPC from a TagURI'''
         
-    def fromRawURI(self, uri):
-        '''Parses the EPC from a EPC Raw URI'''
-        hex_val = uri.split(".x")
-        return self._parseHex(hex_val[1])
-    
     def fromHex(self, hex_val):
         '''Parses the EPC from a Hex Value''' 
-        return self._decodeFromHex(hex_val)
+        return self.decodeFromHex(hex_val)
     
     def toHex(self):
         '''Returns a hex representation of the EPCNumber'''   
-        h = BitArray("0b%s" % self._bits)
-        return h.hex[2:].upper()
+        #h = BitArray("0b%s" % self._bits)
+        h = hex(int(self._bits,2))
+        return h[2:].upper()
     
     @abstract
     def toGS1(self):
@@ -246,12 +241,6 @@ class EPCNumber(object):
             return self.toBinary()
         elif(format.lower()=="bin"):
             return self.toBinary()
-        elif(format.lower()=="raw"):
-            return self.toEPCRawUri()
-        elif(format.lower()=="epcraw"):
-            return self.toEPCRawUri()
-        elif(format.lower()=="epcrawuri"):
-            return self.toEPCRawUri()
         elif(format.lower()=="tag"):
             return self.toEPCTagUri()
         elif(format.lower()=="epctag"):
@@ -298,8 +287,8 @@ class EPCNumber(object):
         '''
         Encodes an EPCNumber from BINARY string
         '''
-        s = ConstBitArray("0x%s"%hex)
-        return self._decodeFromBinary(s.bin[2:])
+        bits = bin(int(hex_val, 16))
+        return self.decodeFromBinary(bits)
     
     @abstract        
     def updateBitString(self):

@@ -54,21 +54,6 @@ class SSCC96Test(unittest.TestCase):
         print sscc96.toBinary()
         print ("====END Test Decoding from Binary Value ===="
         print (""
-     
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***"
-        
-        sscc96 = self._sscc96.encode(self._companyPrefix, self._extensionDigit,self._serialRef ,self._filter, 0)
-        rawUri = sscc96.toEPCRawUri()
-        print ("Raw URI = " + rawUri 
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        sscc96 = factory.parse(rawUri)
-        self._checkFields(sscc96)
-        print sscc96.toHex()
-        print sscc96.toBinary()
-        print ("***==== END Test Decode Raw Uri Value ====***"
-        print (""
     
     def test_FromHex(self):
         print ("==== Test Decoding from Hex Value ===="
@@ -88,7 +73,7 @@ class SSCC96Test(unittest.TestCase):
         tagUri = sscc96.toEPCUri()
         print ("EPC URI = " + tagUri
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         sscc96 = factory.parse(tagUri)
         #Change the filter because the filter is not part filter the pure identity is not available
         self._filter = 0
@@ -117,14 +102,7 @@ class SSCC96Test(unittest.TestCase):
         print sscc96.toEPCTagUri()
         print ("***==== END  Test To EPC Tag Uri Value ====***" 
         print (""
-    
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***"
-        sscc96 = self._sscc96.encode(self._companyPrefix, self._extensionDigit,self._serialRef ,self._filter)
-        print sscc96.toEPCRawUri()
-        print ("***==== END  Test To EPC Tag Uri Value ====***" 
-        print (""
-    
+               
     def test_GS1(self):
         print ("***==== Test To GS1 Value ====***"
         sscc96 = self._sscc96.encode(self._companyPrefix, self._extensionDigit,self._serialRef ,self._filter)
@@ -212,11 +190,6 @@ class SSCC96Test(unittest.TestCase):
         print ("==========================="
         print ("=== Format to JSON ==="
         print sscc96.format("json")
-        print ("==========================="
-        print ("=== Format to RAW_URI ==="
-        print sscc96.format("raw_uRI")
-        print ("==========================="
-        print ("=== Format to DICTIONARY ==="
         f = sscc96.format("DICTIONARY")
         for k, v in f.items():       
             print ("%s=%s\n" % (k, v)

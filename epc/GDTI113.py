@@ -6,7 +6,7 @@ from utils.Partitions import Partitions
 from utils.Conversion import Conversion
 from gs1.GS1Number import GS1Number
 from schema.Field import Field
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 
 class GDTI113(EPCNumber):
     '''
@@ -175,7 +175,6 @@ class GDTI113(EPCNumber):
        xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
        xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
        xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-       xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
        xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
        xml += "\t<GS1>%s</GS1>\n" % (self.toGS1())
        xml += "</Tag>"
@@ -192,7 +191,6 @@ class GDTI113(EPCNumber):
                 ('Hex',self.toHex()),\
                 ('Binary',self.toBinary()),\
                 ('TagURI',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEPCRawUri()),\
                 ('PureIdentity',self.toEPCUri()),\
                 ('GS1',self.toGS1())])
     
@@ -211,7 +209,7 @@ class GDTI113(EPCNumber):
         epcUri = "urn:tagpy:id:gdti:%s.%s.%s" % (self.getFieldValue("CompanyPrefix"),self.getFieldValue("DocumentType"),int(self.getFieldValue("Serial")))
         return epcUri
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes a GDTI from BINARY string
         '''

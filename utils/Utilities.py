@@ -1,4 +1,6 @@
 import string 
+from gs1.Patterns import gtin_patterns, sscc_patterns, gln_patterns
+import re
 
 def ishex(s):
     if(s==None): return False
@@ -15,3 +17,32 @@ def isbinary(s):
         if c != "1" and c!="0": return False
     
     return True
+
+def isGS1(val):
+        '''
+        Determines if the value passed in is a GS1 Encoding.
+        
+        Args:
+            val (str) - A string that needs to be evaluated as a GS1 Encoding
+        
+        Returns:
+            (bool) - True, if the val is a GS1 Encoding. False, if not.
+            
+        '''
+        
+        for pat in gtin_patterns:
+            m = re.match(pat, val)
+            if(m!=None):
+                return True
+        
+        for pat in sscc_patterns:
+            m = re.match(pat, val)
+            if(m!=None):
+                return True
+        
+        for pat in gln_patterns:
+            m = re.match(pat, val)
+            if(m!=None):
+                return True
+            
+        return False  

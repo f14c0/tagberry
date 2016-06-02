@@ -1,5 +1,5 @@
 import bitstring
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from epcerrors.EncodingException import EncodingException
 from utils.Partitions import Partitions
 from utils.Conversion import Conversion
@@ -132,7 +132,6 @@ class GSRN96(EPCNumber):
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "\t<GS1>%s</GS1>\n" % (self.toGS1())
         xml += "</Tag>"
@@ -149,7 +148,6 @@ class GSRN96(EPCNumber):
                 ('Hex',self.toHex()),\
                 ('Binary',self.toBinary()),\
                 ('TagURI',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEPCRawUri()),\
                 ('PureIdentity',self.toEPCUri()),\
                 ('GS1',self.toGS1())])
     
@@ -194,7 +192,7 @@ class GSRN96(EPCNumber):
         epcUri = "urn:tagpy:id:gsrn:%s.%s" % (self.getFieldValue("CompanyPrefix"),self.getFieldValue("ServiceReference"))
         return epcUri 
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes a GSRN from BINARY string
         '''

@@ -1,6 +1,6 @@
 import re
 from epcerrors.GS1Exception import GS1Exception 
-from gs1 import GS1Number
+from gs1.GS1Number import GS1Number
 from gs1.Patterns import gtin_patterns
 from future.types.newint import long
 
@@ -9,7 +9,7 @@ class GTIN(GS1Number):
 	'''Represents a GS1 GTIN'''
 
 	def __init__(self, companyPrefix="0000000"):
-		super().__init__()
+		super().__init__(companyPrefix)
 		self._itemReference = None
 		self._indicatorDigit = "0"
 		self._gtin14 = ""

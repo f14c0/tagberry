@@ -1,4 +1,4 @@
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from epcerrors.EncodingException import EncodingException
 from schema.Field import Field 
 class SGLN195(EPCNumber):

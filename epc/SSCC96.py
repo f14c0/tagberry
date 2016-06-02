@@ -1,6 +1,6 @@
 import bitstring
 import re
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from epcerrors.EncodingException import EncodingException
 from gs1.SSCC import SSCC
 from utils.Partitions import Partitions
@@ -146,7 +146,6 @@ class SSCC96(EPCNumber):
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "\t<GS1>%s</GS1>\n" % (self.toGS1(True))
         xml += "</Tag>"
@@ -163,13 +162,12 @@ class SSCC96(EPCNumber):
                 "Hex": self.toHex(),
                 "Bin": self.toBinary(),
                 "Tag URN" : self.toEPCTagUri(),
-                "Tag Raw URN" : self.toEPCRawUri(),
                 "Pure Identity" : self.toEPCUri(),
                 "SSCC18" : self.toSSCC18(),
                 "GS1" : self.toGS1(True)
                 }
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes an SSCC from BINARY string
         '''

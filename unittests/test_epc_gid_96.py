@@ -1,8 +1,8 @@
 import unittest
-from encoding.EPCFactory import EPCFactory
-from encoding.GID96 import GID96
-from utils.Partitions import Partitions  
 from bitstring import BitArray
+from epc.EPCFactory import EPCFactory
+from epc.GID96 import GID96
+  
 class GID96Test(unittest.TestCase):
     def setUp(self):
         self._gid96 = GID96()
@@ -60,26 +60,13 @@ class GID96Test(unittest.TestCase):
         print ("====END Test Decoding from Binary Value ====")
         print ("")
     
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***")
-        gid96 = self._gid96.encode(self._generalManager, None,self._objectClass ,None, self._serialNumber)
-        rawUri = gid96.toEPCRawUri()
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        gid96 = factory.parse(rawUri)
-        self._checkFields(gid96)
-        print(rawUri)
-        print(gid96.toHex())
-        print(gid96.toBinary())
-        print ("***==== END Test Decode Raw Uri Value ====***")
-        print ("")
     
     def test_ParseEPCUri(self):
         print ("***==== Test Decode EPC Uri Value ====***")
         #TagURI=urn:tag:id:gid:358468.2339.395
         gid96 = self._gid96.encode(self._generalManager, None,self._objectClass ,None, self._serialNumber)
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         tagUri = gid96.toEPCUri()
         gid96 = factory.parse(tagUri)
         self._checkFields(gid96)
@@ -91,7 +78,7 @@ class GID96Test(unittest.TestCase):
     
     def test_ParseEPCTagUri(self):
         print ("***==== Test Decode EPC Tag Uri Value ====***")
-        tagUri = "urn:tagpy:tag:gid-96:%s.%s.%s" % (self._generalManager,self._objectClass,self._serialNumber)
+        tagUri = "urn:epc:tag:gid-96:%s.%s.%s" % (self._generalManager,self._objectClass,self._serialNumber)
         factory = EPCFactory()
         #Take the Tag URI value and parse it through the factory
         gid96 = factory.parse(tagUri)
@@ -109,12 +96,7 @@ class GID96Test(unittest.TestCase):
         print ("***==== END  Test To EPC Tag Uri Value ====***")
         print ("")
     
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***")
-        gid96 = self._gid96.encode(self._generalManager, None,self._objectClass ,None, self._serialNumber)
-        print (gid96.toEPCRawUri())
-        print ("***==== END  Test To EPC Tag Uri Value ====***") 
-        print ("")
+    
     
     def test_Formats(self):
         print ("***==== Test Formatting ====***")
@@ -133,8 +115,6 @@ class GID96Test(unittest.TestCase):
         print ("=== Format to JSON ===")
         print (gid96.format("json"))
         print ("===========================")
-        print ("=== Format to RAW_URI ===")
-        print (gid96.format("raw_uRI"))
         print ("===========================")
         print ("=== Format to DICTIONARY ===")
         f = gid96.format("DICTIONARY")

@@ -1,6 +1,6 @@
 import re
 import bitstring
-from encoding.EPCNumber import EPCNumber 
+from epc.EPCNumber import EPCNumber 
 from epcerrors.EncodingException import EncodingException
 from utils.Partitions import Partitions
 from utils.Conversion import Conversion
@@ -113,7 +113,7 @@ class GRAI96(EPCNumber):
         epcUri = "urn:tagpy:tag:grai-96:%s.%s.%s.%s" % (self.getFieldValue("Filter"),self.getFieldValue("CompanyPrefix"),self.getFieldValue("AssetType"),self.getFieldValue("Serial"))
         return epcUri
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes an GRAI from BINARY string
         '''
@@ -192,7 +192,6 @@ class GRAI96(EPCNumber):
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "\t<GS1>%s</GS1>\n" % (self.toGS1())
         xml += "</Tag>"
@@ -209,7 +208,6 @@ class GRAI96(EPCNumber):
                 ('Hex',self.toHex()),\
                 ('Binary',self.toBinary()),\
                 ('TagURI',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEPCRawUri()),\
                 ('PureIdentity',self.toEPCUri()),\
                 ('GS1',self.toGS1())])
     

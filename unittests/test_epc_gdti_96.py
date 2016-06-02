@@ -1,6 +1,6 @@
 import unittest
-from encoding.EPCFactory import EPCFactory
-from encoding.GDTI96 import GDTI96
+from epc.EPCFactory import EPCFactory
+from epc.GDTI96 import GDTI96
 from utils.Partitions import Partitions  
 from bitstring import BitArray
 
@@ -63,25 +63,13 @@ class GDTI96Test(unittest.TestCase):
         print ("====END Test Decoding from Binary Value ====")
         print ("")
     
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***")
-        epc = self._gdti96.encode(self._companyPrefix, None,self._documentType ,self._filter, self._serialNumber)
-        rawUri = epc.toEPCRawUri()
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        epc = factory.parse(rawUri)
-        self._checkFields(epc)
-        print (epc.toHex())
-        print (epc.toBinary())
-        print ("***==== END Test Decode Raw Uri Value ====***")
-        print ("")
     
     def test_ParseEPCUri(self):
         print ("***==== Test Decode EPC Uri Value ====***")
         #TagURI=urn:tagpy:id:gdti:0358468.202339.000395
         tagUri = "urn:tagpy:id:gdti:%s.%s.%s" % (str(self._companyPrefix), str(self._documentType),str(self._serialNumber))
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         epc = factory.parse(tagUri)
         #Change the filter because the filter is not part filter the pure identity is not available
         #Set the filter to the test's module level filter value
@@ -113,13 +101,7 @@ class GDTI96Test(unittest.TestCase):
         print ("***==== END  Test To EPC Tag Uri Value ====***")
         print ("")
         
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***")
-        epc = self._gdti96.encode(self._companyPrefix, 0,self._documentType ,self._filter, self._serialNumber)
-        print (epc.toEPCRawUri())
-        print ("***==== END  Test To EPC Tag Uri Value ====***") 
-        print ("")
-    
+   
     def test_ToGS1(self):
         print ("***==== Test GS1  ====***")
         epc = self._gdti96.encode(self._companyPrefix, 0,self._documentType ,self._filter, self._serialNumber)
@@ -197,8 +179,7 @@ class GDTI96Test(unittest.TestCase):
         print ("=== Format to JSON ===")
         print (gdti96.format("json"))
         print ("===========================")
-        print ("=== Format to RAW_URI ===")
-        print (gdti96.format("raw_uRI"))
+       
         print ("===========================")
         print ("=== Format to XML ===")
         print (gdti96.format("xml"))

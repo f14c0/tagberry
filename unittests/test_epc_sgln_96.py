@@ -50,25 +50,12 @@ class SGLN96Test(unittest.TestCase):
         print ("====END Test Decoding from Binary Value ===="
         print (""
     
-    def test_ParseRawUri(self):
-        print ("***==== Test Decode Raw Uri Value ====***"
-        epc = self._sgln96.encode(self._companyPrefix, None,self._locationReference ,self._filter, self._extension)
-        rawUri = epc.toEPCRawUri()
-        factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
-        epc = factory.parse(rawUri)
-        self._checkFields(epc)
-        print epc.toHex()
-        print epc.toBinary()
-        print ("***==== END Test Decode Raw Uri Value ====***"
-        print (""
-    
     def test_ParseEPCUri(self):
         print ("***==== Test Decode EPC Uri Value ====***"
         #TagURI=urn:tagpy:id:sgln:0358468.202339.000395
         tagUri = "urn:tagpy:id:sgln:%s.%s.%s" % (str(self._companyPrefix), str(self._locationReference),str(self._extension))
         factory = EPCFactory()
-        #Take the Raw URI value and parse it through the factory
+        #Take the URI value and parse it through the factory
         epc = factory.parse(tagUri)
         #Change the filter because the filter is not part filter the pure identity is not available
         #Set the filter to the test's module level filter value
@@ -100,12 +87,7 @@ class SGLN96Test(unittest.TestCase):
         print ("***==== END  Test To EPC Tag Uri Value ====***"
         print (""
     
-    def test_ToRawUri(self):
-        print ("***==== Test To Raw Uri Value ====***"
-        epc = self._sgln96.encode(self._companyPrefix, None,self._locationReference ,self._filter, self._extension)
-        print epc.toEPCRawUri()
-        print ("***==== END  Test To EPC Tag Uri Value ====***" 
-        print ("" 
+    
     
     def test_ToGS1(self):
         print ("***==== Test GS1  ====***"
@@ -184,8 +166,6 @@ class SGLN96Test(unittest.TestCase):
         print ("=== Format to JSON ==="
         print sgln96.format("json")
         print ("==========================="
-        print ("=== Format to RAW_URI ==="
-        print sgln96.format("raw_uRI")
         print ("==========================="
         print ("=== Format to XML ==="
         print sgln96.format("xml")

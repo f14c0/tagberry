@@ -40,10 +40,10 @@ class SGTIN96(EPCNumber):
                 Empty and ignored
             **kwargs:
                 companyPrefix 
-                indicatorDigit
+                indicatorDigit - default is 0
                 itemReference
-                filter
-                serialNumber
+                filter - default is 3
+                serialNumber - default is 0
         Returns:
            EPCNumber : An encode instance of an SGTIN-96  
         """
@@ -51,16 +51,13 @@ class SGTIN96(EPCNumber):
         conversion = Conversion()
         
         companyPrefix = kwargs.get("companyPrefix")
-        indicatorDigit = kwargs.get("indicatorDigit")
+        indicatorDigit = kwargs.get("indicatorDigit", 0)
         itemReference = kwargs.get("itemReference")
-        filter_val = kwargs.get("filter")
-        serialNumber = kwargs.get("serialNumber", None)
+        filter_val = kwargs.get("filter", 3)
+        serialNumber = kwargs.get("serialNumber", 0)
         
         #Filter
         self.setFieldValue("Filter", filter_val)
-        
-        if serialNumber == None:
-            serialNumber = 0
         
         #Partition
         partition = Partitions()
@@ -103,10 +100,25 @@ class SGTIN96(EPCNumber):
                                 int(self.getFieldValue("SerialNumber")))
          
         #Set the _bits for the SGTIN-96
-        self._bits = bsp.unpack("bin")[0][2:]
+        self._bits = bsp.unpack("bin")[0]
         
         return self
     
+    @property
+    def serialnumber(self, value):
+        '''
+        Gets method for a Serial Number.
+                        
+        Example:
+            >>> sgtin = EPCFactory.create("SGTIN96")
+            >>> sgtin.serialnumber = 123456
+            >>> print(sgtin.serialnumber)
+        
+        Returns:
+            int: The current serial number for the encoding
+        
+        '''
+        return self.getFieldValue("SerialNumber")
     
     @serialnumber.setter
     def serialnumber(self, value):
@@ -172,7 +184,7 @@ class SGTIN96(EPCNumber):
     
         return int(serial_number)
      
-    def setFieldValue(self,fieldName,val,ItemReference=False):
+    def setFieldValue(self, fieldName, val, ItemReference=False):
         """
         Overriden from the base class because if the SerialNumber changes the indicator digit must be preserved
         otherwise its a straight exchange
@@ -180,8 +192,10 @@ class SGTIN96(EPCNumber):
         if not ItemReference and fieldName == 'ItemReference':
             raise FieldValueException('To change the ItemReference value after construction use the setItemReference and setIndicatorDigit helper functions.  Otherwise, set ItemReference to True.')
         field = self._fieldDictionary[fieldName]
+        if val is None:
+            s = val
         field.setFieldValue(val) 
-        self._updateBitString()
+        self.updateBitString()
     
     def updateBitString(self):
         self._packStringFormat = 'uint:8, uint:3, uint:3, uint:%s, uint:%s, uint:38' % (self.getField("CompanyPrefix").getBitLength(),self.getField("ItemReference").getBitLength())
@@ -195,7 +209,7 @@ class SGTIN96(EPCNumber):
                                 int(self.getFieldValue("SerialNumber")))
          
         #Set the _bits for the SGTIN-96
-        self._bits = bsp.unpack("bin")[0][2:]
+        self._bits = bsp.unpack("bin")[0]
             
     def fromURI(self, uri):
         '''
@@ -213,19 +227,19 @@ class SGTIN96(EPCNumber):
         #set the filter value to 0
         filter_value = 0
         serialNumber = s[2]
-        self.encode(companyPrefix, indicatorDigit, itemReference, filter_value, int(serialNumber))
-        return self;
+        self.encode(companyPrefix=companyPrefix, indicatorDigit=indicatorDigit, itemReference=itemReference, filter=filter_value, serialNumber=int(serialNumber))
+        return self
     
     def fromTagUri(self,tagUri):
         '''Parses the EPC from a TagURI'''
         regEx = re.compile("\d+")
         s = regEx.findall(tagUri)
-        filter = s[1]
+        filter_val = s[1]
         companyPrefix = s[2]
         indicatorDigit = s[3][0:1]
         itemReference = s[3][1:]
         serialNumber = s[4]
-        self.encode(companyPrefix, indicatorDigit, itemReference, filter, long(serialNumber))
+        self.encode(companyPrefix=companyPrefix, indicatorDigit=indicatorDigit, itemReference=itemReference, filter=filter_val, serialNumber=int(serialNumber))
         return self
             
     def toEPCTagUri(self):
@@ -235,7 +249,8 @@ class SGTIN96(EPCNumber):
         '''
         if(len(self.getFieldValue("CompanyPrefix"))+len(self.getFieldValue("ItemReference")) != 13):
             raise EncodingException("The Length of the CompanyPrefix and the ItemReference must equal 13")
-        epcUri = "urn:tagpy:tag:sgtin-96:%s.%s.%s.%s" % (self.getFieldValue("Filter"),self.getFieldValue("CompanyPrefix"),self.getFieldValue("ItemReference"),long(self.getFieldValue("SerialNumber")))
+        epcUri = "urn:epc:tag:sgtin-96:%s.%s.%s.%s" % (self.getFieldValue("Filter"), self.getFieldValue("CompanyPrefix"), 
+                                                       self.getFieldValue("ItemReference"), int(self.getFieldValue("SerialNumber")))
         return epcUri
     
     def toEPCUri(self):
@@ -245,22 +260,15 @@ class SGTIN96(EPCNumber):
         '''
         if(len(self.getFieldValue("CompanyPrefix"))+len(self.getFieldValue("ItemReference")) != 13):
             raise EncodingException("The Length of the CompanyPrefix and the ItemReference must equal 13")
-        epcUri = "urn:tagpy:id:sgtin:%s.%s.%s" % (self.getFieldValue("CompanyPrefix"),self.getFieldValue("ItemReference"),long(self.getFieldValue("SerialNumber")))
+        epcUri = "urn:epc:id:sgtin:%s.%s.%s" % (self.getFieldValue("CompanyPrefix"), self.getFieldValue("ItemReference"), int(self.getFieldValue("SerialNumber")))
         return epcUri 
-    def getUseGS1FixedSerialNumber(self):
-        return self._fixedSerialNumber
-    def setUseGS1FixedSerialNumber(self,value):
-        self._fixedSerialNumber = value
-    def getFixedGS1SerialNumberLength(self):
-        return self._fixedSerialNumberLength
-    def setFixedGS1SerialNumberLength(self,value):
-        self._fixedSerialNumberLength = value
+    
     
     def toGS1(self,useParenthesesAroundAIs=True):
         '''Returns the EPC epc translated to a full GS1 with App Identifiers.''' 
         gtin = GTIN(self.getFieldValue("CompanyPrefix"))
-        gtin.setUseFixedSerialNumber(self.getUseGS1FixedSerialNumber())
-        gtin.setFixedSerialNumberLength(self.getFixedGS1SerialNumberLength())
+        gtin.setUseFixedSerialNumber((self.fixedGS1SerialNumberLength>0))
+        gtin.setFixedSerialNumberLength(self.fixedGS1SerialNumberLength)
         gtin.encode(self.getFieldValue("ItemReference")[0:1], self.getFieldValue("ItemReference")[1:], self.getFieldValue("SerialNumber"))
         return gtin.toGS1(useParenthesesAroundAIs) 
     
@@ -303,14 +311,13 @@ class SGTIN96(EPCNumber):
         xml +=  "\t\t<Field name='CompanyPrefix' value='%s'/>\n" % (self.getFieldValue("CompanyPrefix"))
         xml +=  "\t\t<Field name='ItemReference' value='%s'/>\n" % (self.getFieldValue("ItemReference"))
         xml +=  "\t\t<Field name='IndicatorDigit' value='%s'/>\n" % (self.getFieldValue("ItemReference")[0:1])
-        xml +=  "\t\t<Field name='SerialNumber' value='%s'/>\n" % (long(self.getFieldValue("SerialNumber")))
+        xml +=  "\t\t<Field name='SerialNumber' value='%s'/>\n" % (int(self.getFieldValue("SerialNumber")))
         xml +=  "\t\t<Field name='RawItemReference' value='%s'/>\n" % (self.getFieldValue("ItemReference")[1:])
         
         xml += "\t</Fields>\n"
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUrn>%s</TagUrn>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "\t<GTIN14>%s</GTIN14>\n" % (self.toGTIN14())
         xml += "\t<GS1>%s</GS1>\n" % (self.toGS1(True))
@@ -323,7 +330,7 @@ class SGTIN96(EPCNumber):
                 "Company Prefix" : self.getFieldValue("CompanyPrefix"),
                 "Item Reference" : self.getFieldValue("ItemReference")[1:],
                 "Indicator Digit" : self.getFieldValue("ItemReference")[0:1],
-                "Serial Number" : long(self.getFieldValue("SerialNumber")),
+                "Serial Number" : int(self.getFieldValue("SerialNumber")),
                 "Hex" : self.toHex(),
                 "Bin" : self.toBinary(),
                 "Tag URN" : self.toEPCTagUri(),
@@ -333,39 +340,46 @@ class SGTIN96(EPCNumber):
                 }
         
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self, binary):
         '''
         Decodes an SGTIN from BINARY string
+        
+        Args:
+          binary (str) - A 96 bit binary string representing an SGTIN-96
+        Returns:
+          (SGTIN96) - An instance of the SGTIN96 Class. 
+        
+        Raises:
+            EncodingException - If the binary string passed in is not 96 bits, this exception is thrown.
         '''
         self._loadFields()
+        
         if(len(binary)!=96):
             raise EncodingException("Binary string is not 96 bits. SGTIN-96 Requires 96 bits to decode properly")
         
-        
-        
         #Filter
-        filter = binary[self.getField("Filter").getOffset():self.getField("Filter").getOffset() + self.getField("Filter").getBitLength()]
-        self.setFieldValue("Filter",int(filter,2))
-        partitionValue = binary[self.getField("Partition").getOffset():self.getField("Partition").getOffset() + self.getField("Partition").getBitLength()]
-        partitionValue = int(partitionValue,2)
+        filter_value = binary[8:11]
+        self.setFieldValue("Filter",int(filter_value, 2))
+        partitionValue = binary[11:14]
+        partitionValue = int(partitionValue, 2)
         self.setFieldValue("Partition",partitionValue)
         
         #Partition
         partitions = Partitions()
-        companyPrefixLength = partitions.getCompanyPrefixBitLength(partitionValue,"SGTIN")
+        companyPrefixBitLength = partitions.getCompanyPrefixBitLength(partitionValue,"SGTIN")
         companyPrefixDigitLength = partitions.getCompanyPrefixDigitLength(partitionValue,"SGTIN")
         self.getField("CompanyPrefix").setOffset(14)
-        self.getField("CompanyPrefix").setBitLength(companyPrefixLength)
+        self.getField("CompanyPrefix").setBitLength(companyPrefixBitLength)
         self.getField("CompanyPrefix").setDigitLength(companyPrefixDigitLength)
-        itemReferenceLength = partitions.getItemBitLength(partitionValue,"SGTIN")
+        itemReferenceBitLength = partitions.getItemBitLength(partitionValue,"SGTIN")
         itemReferenceDigitLength = partitions.getItemDigitLength(partitionValue,"SGTIN")
         
-        self.getField("ItemReference").setOffset(14 + companyPrefixLength)
-        self.getField("ItemReference").setBitLength(itemReferenceLength)
+        self.getField("ItemReference").setOffset(14 + companyPrefixBitLength)
+        self.getField("ItemReference").setBitLength(itemReferenceBitLength)
         self.getField("ItemReference").setDigitLength(itemReferenceDigitLength)
         
-        companyPrefix = binary[self.getField("CompanyPrefix").getOffset():self.getField("CompanyPrefix").getOffset() + self.getField("CompanyPrefix").getBitLength()]
-        companyPrefix = str(int(companyPrefix,2)).zfill(companyPrefixDigitLength)
+        companyPrefix = binary[14:14 + self.getField("CompanyPrefix").getBitLength()]
+        companyPrefix = str(int(companyPrefix, 2)).zfill(companyPrefixDigitLength)
         self.setFieldValue("CompanyPrefix",companyPrefix)
         itemReference = binary[self.getField("ItemReference").getOffset():self.getField("ItemReference").getOffset() + self.getField("ItemReference").getBitLength()]
         #make sure we are on a 1 byte boundary
@@ -377,14 +391,11 @@ class SGTIN96(EPCNumber):
         self.setFieldValue("ItemReference", itemReference, True)
         self._ignoreUpdate = False
         serialNumber = binary[self.getField("SerialNumber").getOffset():self.getField("SerialNumber").getOffset() + self.getField("SerialNumber").getBitLength()]
-        serialNumber = int(serialNumber,2)
-        self.setFieldValue("SerialNumber",serialNumber)
+        
+        self.serialnumber=int(serialNumber,2)
         
         return self
-        
-    
-        
-                
+                 
     def _loadFields(self):
         """
         Loads Fields for the SGTIN-96 
