@@ -14,3 +14,6 @@ TagBerry
 .. image:: https://requires.io/github/csailer/tagberry/requirements.svg?branch=master
      :target: https://requires.io/github/csailer/tagberry/requirements/?branch=master
      :alt: Requirements Status
+
+TagBerry is a powerfull EPC/GS1 Encoding Library that allows you to encode, decode, and translate all of the GS1 and EPC Global encodings.
+
