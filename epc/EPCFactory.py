@@ -1,6 +1,5 @@
 import math
-from bitstring import ConstBitArray
-from utils.Utilities import ishex, isbinary
+from utils.Utilities import ishex, isbinary, isGS1
 from factories.FactoryBase import FactoryBase
 from epcerrors.EncodingException import EncodingException
 from epc.SGTIN96 import SGTIN96
@@ -72,19 +71,22 @@ class EPCFactory(FactoryBase):
         epcNumber = None
 
         if((len(str(value)) >= 24) and (ishex(value))):
-            epcNumber = self._parseHex(value)
+            epcNumber = self.parseFromHex(value)
+            
         elif((len(str(value)) >= 96) and (isbinary(value))):
             epcNumber = self._parseBinary(value)
-        elif(value.startswith("urn:epc:raw:")):
-            epcNumber = self._parseRawUri(value)
-        elif(value.startswith("urn:epc:id:")):
+        
+        elif(str(value).startswith("urn:epc:id:")):
             epcNumber = self._parseEpcUri(value)
-        elif(value.startswith("urn:epc:tag:")):
+        
+        elif(str(value).startswith("urn:epc:tag:")):
             epcNumber = self._parseTagUri(value)
-        elif(value.startswith("urn:epc:idpat:")):
+        
+        elif(str(value).startswith("urn:epc:idpat:")):
             #TODO Add idpat parsing to Base Class
             pass
-        elif(self._isGS1(value)):
+        
+        elif(isGS1(value)):
             #TODO Check the GS1 Parsing
             epcNumber = self._parseGS1(value)
         
@@ -93,32 +95,60 @@ class EPCFactory(FactoryBase):
         
         return epcNumber
         
-    def _parseHex(self,hexValue):
+    def parseFromHex(self, hexValue):
+        '''
+        Converts a Hexadecimal representation of an EPC Encoding into an instance of a derivative of an EPCNumber
+        
+        Args:
+         hexValue (str) - A Hex representation of an EPC Encoding
+        
+        Returns:
+          (EPCNumber) - An EPCNumber of the correct encoding type
+        
+        Example:
+        >>> from epc.SGTIN96 import SGTIN96
+        >>> sgtin96 = SGTIN96().parseFromHex('30EC222FA92054C00000018B')
+        >>> #Now make sure the result is in fact an SGTIN-96
+        >>> if isinstance(sgtin96, SGTIN96):
+        >>>    print("SGTIN-96")
+        >>> else:
+        >>>    print("Not an SGTIN-96")
+        '''
+        
         epc = None
-        s = ConstBitArray("0x%s"%hexValue)
-        bits = s.bin[2:]
+        
+        bits = bin(int(hexValue, 16))
+        
         headerValue = bits[0:8]
+        
         if(int(headerValue,2)==48):
             epc = SGTIN96()
+        
         elif(int(headerValue,2)==49):
             epc = SSCC96()
+        
         elif(int(headerValue,2)==53):
             epc = GID96()    
+        
         elif(int(headerValue,2)==52):
             epc = GIAI96()           
+        
         elif(int(headerValue,2)==51):
             epc = GRAI96()
+        
         elif(int(headerValue,2)==44):
             epc = GDTI96()
+        
         elif(int(headerValue,2)==45):
             epc = GSRN96()
+        
         elif(int(headerValue,2)==50):
             epc = SGLN96()
             
-        if not epc:
+        if epc is None:
             raise EncodingException('The value %s is an invalid EPC and could not be parsed.' % hexValue)
         
-        epc._decodeFromHex(hexValue)    
+        epc.decodeFromHex(hexValue)    
         return epc
     
     def _parseBinary(self,binary):
@@ -141,16 +171,11 @@ class EPCFactory(FactoryBase):
             epc = SGLN96()
         elif(int(headerValue,2)==58):
             epc = GDTI113()            
-        epc._decodeFromBinary(binary)
+        epc.decodeFromBinary(binary)
         return epc 
-    
-    def _parseRawUri(self,rawUri):
-        #urn:epc:raw:96.x30F415E110C598C00000018B
-        hex_val = rawUri.split(".x")
-        return self._parseHex(hex_val[1]) 
-     
+         
     def _parseEpcUri(self,epcUri):
-        #urn:epc:id:sgtin:0358468.202339.000395
+
         epc = None 
         if(epcUri.startswith("urn:epc:id:sgtin")):
             epc = SGTIN96()
@@ -173,7 +198,7 @@ class EPCFactory(FactoryBase):
         elif(epcUri.startswith("urn:epc:id:sgln")):
             epc = SGLN96()
             
-        epc = epc.fromEPCUri(epcUri)
+        epc = epc.fromURI(epcUri)
         return epc
      
     def _parseTagUri(self,tagUri):
@@ -199,6 +224,5 @@ class EPCFactory(FactoryBase):
             
         epc = epc.fromTagUri(tagUri)     
         return epc
-    
     
     

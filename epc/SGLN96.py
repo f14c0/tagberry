@@ -1,6 +1,6 @@
 import re
 import bitstring
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from epcerrors.EncodingException import EncodingException
 from utils.Partitions import Partitions
 from utils.Conversion import Conversion
@@ -142,7 +142,6 @@ class SGLN96(EPCNumber):
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "\t<GS1>%s</GS1>\n" % (self.toGS1())
         xml += "</Tag>"
@@ -159,7 +158,6 @@ class SGLN96(EPCNumber):
                 ('Hex',self.toHex()),\
                 ('Binary',self.toBinary()),\
                 ('TagURI',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEPCRawUri()),\
                 ('PureIdentity',self.toEPCUri()),\
                 ('GS1',self.toGS1())])
     
@@ -174,7 +172,7 @@ class SGLN96(EPCNumber):
     def getSerialNumber(self):
         return self.getFieldValue("Extension")
     
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes a GDTI from BINARY string
         '''

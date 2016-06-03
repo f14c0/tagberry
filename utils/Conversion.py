@@ -1,4 +1,10 @@
-class Conversion:
+
+
+class Conversion(object):
+	"""
+	The Conversion object is used to coerce types. This is a very un-pythonic concept
+	but it is required in certain areas the EPC/GS1 Encoding domain.  
+	"""
 
 	def int8(self,val):
 		"""convert to signed 8 bit integer"""
@@ -42,9 +48,13 @@ class Conversion:
 
 	def _toInt(self,val):
 		"""converts types not of integer to an integer"""
-		if(not isinstance(val,int)):
-			return int(val)
-		else:
-			return val
-		
+		try:
+			if(isinstance(val, str) and val is not None):
+				return int(val)
+			elif val is None:
+				return 0
+			else:
+				return val
+		except Exception as e:
+			s = e	
 	

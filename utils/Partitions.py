@@ -17,6 +17,8 @@ class Partitions():
             self.GID   = [] #No Partition Table for GID-96
         def getNumbers(self,partitionType):
             '''Returns the proper partition table array based on the the partition type e.g. SGTIN, SSCC etc.'''
+            if partitionType=="SGTIN-96":
+                return  self.SGTIN
             if partitionType=="SGTIN":
                 return  self.SGTIN
             elif partitionType=="SSCC":
@@ -56,7 +58,7 @@ class Partitions():
                         if numbers[i][self.PartitionValue] == partitionValue:
                                 return numbers[i][self.CompanyPrefixDigits]
 
-        def getCompanyPrefixBitLength(self,partitionValue,partitionType):
+        def getCompanyPrefixBitLength(self,partitionValue, partitionType):
                 """Returns the number of bits allowed in a Company Prefix for a given tagpy epc"""
                 numbers = self.getNumbers(partitionType)
                 for i in range(len(numbers)):

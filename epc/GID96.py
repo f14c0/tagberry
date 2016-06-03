@@ -1,6 +1,6 @@
 import re
 import bitstring
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from epcerrors.EncodingException import EncodingException
 from schema.Field import Field
 
@@ -105,7 +105,6 @@ class GID96(EPCNumber):
         xml += "\t<Hex>%s</Hex>\n" % (self.toHex())
         xml += "\t<Binary>%s</Binary>\n" % (self.toBinary())
         xml += "\t<TagUri>%s</TagUri>\n" % (self.toEPCTagUri())
-        xml += "\t<TagRawUri>%s</TagRawUri>\n" % (self.toEPCRawUri())
         xml += "\t<PureIdentity>%s</PureIdentity>\n" % (self.toEPCUri())
         xml += "</Tag>"
         return xml;
@@ -119,10 +118,9 @@ class GID96(EPCNumber):
                 ('Hex',self.toHex()),\
                 ('Binary',self.toBinary()),\
                 ('TagURI',self.toEPCTagUri()),\
-                ('TagRawURI',self.toEPCRawUri()),\
                 ('PureIdentity',self.toEPCUri())])
      
-    def _decodeFromBinary(self,binary):
+    def decodeFromBinary(self,binary):
         '''
         Decodes an GID-96 from BINARY string
         '''

@@ -1,4 +1,4 @@
-from encoding.EPCNumber import EPCNumber
+from epc.EPCNumber import EPCNumber
 from schema.Field import Field 
 
 class DOD96(EPCNumber):

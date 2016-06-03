@@ -34,15 +34,12 @@ class Field(object):
         else:
             return str(self._fieldValue)
     
-    def setFieldValue(self,value):
+    def setFieldValue(self, value):
         """Sets the Value of the Field"""
-        #self.validateSize(value)
-        self._fieldValue=str(value)
-       
+        self._fieldValue=value
         #refresh fieldBits value
         self.getBits()
        
-
     def getOffset(self):
         return self._offset
     def setOffset(self,value):
