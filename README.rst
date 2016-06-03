@@ -6,7 +6,7 @@ TagBerry
     :alt: Latest Docs
 
 .. image:: https://travis-ci.org/csailer/tagberry.svg?branch=master
-    :target: https://travis-ci.org/csailer/tagberry
+    :target: https://travis-ci.org/csailer/tagberry.svg?branch=master
 
 .. image:: https://codecov.io/gh/csailer/tagberry/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/csailer/tagberry
