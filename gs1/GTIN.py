@@ -2,7 +2,7 @@ import re
 from epcerrors.GS1Exception import GS1Exception 
 from gs1.GS1Number import GS1Number
 from gs1.Patterns import gtin_patterns
-from future.types.newint import long
+
 
 
 class GTIN(GS1Number):
@@ -188,7 +188,7 @@ class GTIN(GS1Number):
 			if self.getUseFixedSerialNumber() == True:
 				return "01%s21%s" % (self._gtin14,str(self._serialNumber).zfill(self.getFixedSerialNumberLength()))
 			else:
-				return "01%s21%s" % (self._gtin14, long(self._serialNumber))
+				return "01%s21%s" % (self._gtin14, int(self._serialNumber))
 					
 	def toURN(self):
 		return 'urn:tagpy:id:sgtin:{0}.{1}{2}.{3}'.format(self._companyPrefix, self._indicatorDigit, self._itemReference, int(self._serialNumber))			
