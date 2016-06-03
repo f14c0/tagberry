@@ -1,10 +1,10 @@
+import re
 import unittest
-from bitstring import BitArray, BitStream
 from epc.EPCFactory import EPCFactory
 from epc.SGTIN96 import SGTIN96
 from utils.Partitions import Partitions  
-from utils.Utilities import hextobin
-import re
+#from utils.Utilities import hextobin
+
 
 
 class SGTIN96Test(unittest.TestCase):
