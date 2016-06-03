@@ -1,9 +1,9 @@
 codecov:
-  token: 64449dda-705a-4d5a-b8e3-edcee98a457c
-  branch: master
-  bot: csailer
+  - token: 64449dda-705a-4d5a-b8e3-edcee98a457c
+  - branch: master
+  - bot: null
 
 coverage:
-  precision: 2
-  round: down
-  range: "0...80"
+  - precision: 2
+  - round: down
+  - range: "0...100"
