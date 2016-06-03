@@ -45,4 +45,16 @@ def isGS1(val):
             if(m!=None):
                 return True
             
-        return False  
+        return False
+
+def hextobin(hexval):
+        '''
+        Takes a string representation of hex data with
+        arbitrary length and converts to string representation
+        of binary.  Includes padding 0s
+        '''
+        thelen = len(hexval)*4
+        binval = bin(int(hexval, 16))[2:]
+        while ((len(binval)) < thelen):
+            binval = '0' + binval
+        return binval  

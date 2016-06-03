@@ -242,13 +242,26 @@ class SGTIN96(EPCNumber):
         self.encode(companyPrefix=companyPrefix, indicatorDigit=indicatorDigit, itemReference=itemReference, filter=filter_val, serialNumber=int(serialNumber))
         return self
             
-    def toEPCTagUri(self):
+    def toTagURI(self):
         '''
-        Returns the SGTIN-96 in an EPC URI Representation
-        Example: urn:tagpy:tag:sgtin-96:3.0614141.812345.6789
+        Creates an EPC Tag URI Representation of this SGTIN-96.
+        
+        Returns:
+         (str) - An EPC Tag URI
+        
+        Example:
+            >>> sgtin96 = sgtin96.encode(companyPrefix="035846802", 
+                                       indicatorDigit=0,
+                                       itemReference=339,
+                                       filter=3, 
+                                       serialNumber=123) 
+            >>> tag_uri = sgtin96.toTagURI()
+            >>> assert tag_uri == 'urn:epc:tag:sgtin-96:3.035846802.0339.123'
         '''
+        
         if(len(self.getFieldValue("CompanyPrefix"))+len(self.getFieldValue("ItemReference")) != 13):
             raise EncodingException("The Length of the CompanyPrefix and the ItemReference must equal 13")
+        
         epcUri = "urn:epc:tag:sgtin-96:%s.%s.%s.%s" % (self.getFieldValue("Filter"), self.getFieldValue("CompanyPrefix"), 
                                                        self.getFieldValue("ItemReference"), int(self.getFieldValue("SerialNumber")))
         return epcUri
@@ -333,8 +346,8 @@ class SGTIN96(EPCNumber):
                 "Serial Number" : int(self.getFieldValue("SerialNumber")),
                 "Hex" : self.toHex(),
                 "Bin" : self.toBinary(),
-                "Tag URN" : self.toEPCTagUri(),
-                "Pure Identity" : self.toEPCUri(),
+                "Tag URN" : self.toTagURI(),
+                "EPC URI" : self.toEPCUri(),
                 "GTIN14" : self.toGTIN14(),
                 "GS1" : self.toGS1(True),
                 }

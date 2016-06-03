@@ -3,6 +3,8 @@ from bitstring import BitArray, BitStream
 from epc.EPCFactory import EPCFactory
 from epc.SGTIN96 import SGTIN96
 from utils.Partitions import Partitions  
+from utils.Utilities import hextobin
+import re
 
 
 class SGTIN96Test(unittest.TestCase):
@@ -91,20 +93,22 @@ class SGTIN96Test(unittest.TestCase):
         self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
         
        
-    def test_ParseBinary(self):
+    def test_parse_binary(self):
         
         sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
                                        serialNumber=self._serialNumber)
-        bin = sgtin96.toBinary()
-        self.assertEquals(len(bin), 96)
+        bin_val = sgtin96.toBinary()
+        self.assertEquals(len(bin_val), 96)
         factory = EPCFactory()
         #Take the binary value and parse it through the factory
-        sgtin96 = factory.parse(bin)
+        sgtin96 = factory.parse(bin_val)
         self._checkFields(sgtin96)
     
+        partitions = Partitions()
+        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
@@ -135,7 +139,7 @@ class SGTIN96Test(unittest.TestCase):
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
         self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
         
-    def test_ParseEPCTagUri(self):
+    def test_parse_tag_uri(self):
         
         tagUri = "urn:epc:tag:sgtin-96:%s.%s.%s.%s" % (str(self._filter),str(self._companyPrefix), str(self._indicatorDigit) + str(self._itemRef),str(self._serialNumber))
         factory = EPCFactory()
@@ -152,13 +156,20 @@ class SGTIN96Test(unittest.TestCase):
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
         self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
         
-    def test_ToEPCTagUri(self):
+    def test_to_epc_tag_uri(self):
         sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
                                        serialNumber=self._serialNumber)
         
+        tag_uri = sgtin96.toTagURI()
+        digits = re.findall('\d+', tag_uri)
+        self.assertTrue(tag_uri.startswith("urn:epc:tag:sgtin-96:"), "Incorrect urn returned for Tag URI")
+        self.assertEqual(digits[1], "3", "Tag URI has incorrect filter value.")
+        self.assertEqual(digits[2], '035846802', "Tag URI has incorrect Company Prefix value.")
+        self.assertEqual(digits[3], '1339', "Tag URI has incorrect Indicator Digit and Item Reference value.")
+        self.assertEqual(digits[4], '395', "Tag URI has incorrect Serial Number value.")
         
     def test_ToGS1(self):
         
@@ -283,23 +294,27 @@ class SGTIN96Test(unittest.TestCase):
         
         filterValue = bits[epc.getField("Filter").getOffset():int(epc.getField("Filter").getOffset()) + int(epc.getField("Filter").getBitLength())]
         self.assertEquals(int(filterValue,2),int(self._filter))
-        hexBodyValue = hex_val[2:18]
-        hexBodyBits = BitArray(hex=hexBodyValue).bin[2:]
+       
         partitionValue = bits[epc.getField("Partition").getOffset():int(epc.getField("Partition").getOffset()) + int(epc.getField("Partition").getBitLength())]
-        partitionValue = int(partitionValue,2)
+        partitionValue = int(partitionValue, 2)
         #Check the bits, contained in the hex, for the company prefix
         
-        startPos = 6
-        companyPrefixBits = hexBodyBits[startPos:startPos+epc.getField("CompanyPrefix").getBitLength()]
-        companyPrefixValue = BitArray(bin=companyPrefixBits).uint 
-        self.assertEquals(companyPrefixValue,int(self._companyPrefix))
+        startPos = 14
+        partitions = Partitions()
+        cp_length = partitions.getCompanyPrefixBitLength(partitionValue, "SGTIN")
+        companyPrefixBits = bits[startPos:startPos+cp_length]
         
-        startPos = startPos + epc.getField("CompanyPrefix").getBitLength()
-        itemReferenceBits = hexBodyBits[startPos:startPos+epc.getField("ItemReference").getBitLength()]
+        self.assertEquals(int(companyPrefixBits, 2), int(self._companyPrefix))
         
+        ir_length = partitions.getItemBitLength(partitionValue, "SGTIN")
+        startPos = 14 + cp_length
+        itemReferenceBits = bits[startPos:startPos+ir_length]
         
-        itemReferenceValue = str(int(itemReferenceBits,2)).zfill(epc.getField("ItemReference").getDigitLength())
-        self.assertEquals(str(itemReferenceValue),str(self._indicatorDigit) + str(self._itemRef))
+        self.assertEqual(ir_length + cp_length, 44, "CompanyPrefix Bits and ItemReference Bits should equal 44 bits")
+        
+        ir_digit_length = partitions.getItemDigitLength(partitionValue, "SGTIN")
+        itemReferenceValue = str(int(itemReferenceBits, 2)).zfill(ir_digit_length)
+        self.assertEquals(str(itemReferenceValue), str(self._indicatorDigit) + str(self._itemRef))
            
         
         
