@@ -8,8 +8,8 @@ TagBerry
 .. image:: https://travis-ci.org/csailer/tagberry.svg?branch=master
     :target: https://travis-ci.org/csailer/tagberry
 
-.. image:: http://codecov.io/github/csailer/tagberry/coverage.svg?branch=master
-    :target: http://codecov.io/github/csailer/tagberry?branch=master
+.. image:: https://codecov.io/gh/csailer/tagberry/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/csailer/tagberry
 
 .. image:: https://requires.io/github/csailer/tagberry/requirements.svg?branch=master
      :target: https://requires.io/github/csailer/tagberry/requirements/?branch=master
