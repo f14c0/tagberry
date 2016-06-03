@@ -1,9 +1,23 @@
-codecov:
-  - token: 64449dda-705a-4d5a-b8e3-edcee98a457c
-  - branch: master
-  - bot: null
-
 coverage:
-  - precision: 2
-  - round: down
-  - range: "0...100"
+  precision: 2
+  round: down
+  range: "0...100"
+
+  status:
+    project:
+      default:
+        target: auto
+        if_no_uploads: error
+
+    patch:
+      default:
+        if_no_uploads: error
+
+    changes: true
+
+branches:
+  - master
+
+comment:
+  layout: "header, diff, changes, suggestions"
+  behavior: default
