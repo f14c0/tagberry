@@ -4,8 +4,8 @@ from schema.Field import Field
  
 class SGTIN198(EPCNumber):
     '''Represents an SGTIN-198 EPC Encoding'''
-    def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
-        raise NotImplementedError('This class has not been fully implemented yet.')
+    def __init__(self, startSerialNumber=0, numOfSerialNumbers=0):
+        
         EPCNumber.__init__(self)
         self._loadFields()
     

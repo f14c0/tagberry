@@ -8,24 +8,31 @@ gtin14_AI01_AI21_FIXEDLEN_PARAMS = r"^01(?P<gtin14>\d{14})21(?P<serialNumber>[A-
 gtin14_AI01_AI21_VARIABLELEN_PARAMS = r"^01(?P<gtin14>\d{14})21(?P<serialNumber>[A-Za-z0-9]{1,20})$"
 gtin14_AI01_AI21_FIXEDLEN_START = r'^01(?P<gtin14>\d{14})21(?P<serialNumber>\d{12})([A-Za-z0-9]*)'
 gtin14_AI01_AI21_FIXEDLEN_START_PARAMS = r"^01(?P<gtin14>\d{14})21(?P<serialNumber>[A-Za-z0-9]{12})(\d*)"
-gtin_AI01P_AI21P_AI10P_AI17P = r"^\(01\)(?P<gtin14>\d{14})\(21\)([A-Za-z0-9]{1,20})\(17\)(\d{6})\(10\)(\d{1,20})$"
-gtin_AI01_AI21_AI10_AI17 = r"^01(?P<gtin14>\d{14})21(?P<serialNumber>[A-Za-z0-9]{1,20})17(\d{6})10(\d{1,20})$"
-gtin_AI01_AI21_UNIVERSAL = r"^(\(01\)|01)(?P<gtin14>\d{14})(\(21\)|21)(?P<serialNumber>[A-Za-z0-9]{1,20})(\((d{2})\)|17)?(.)*"
+gtin14_AI01P_AI21P_AI10P_AI17P = r"^\(01\)(?P<gtin14>\d{14})\(21\)([A-Za-z0-9]{1,20})\(17\)(\d{6})\(10\)(\d{1,20})$"
+gtin14_AI01_AI21_AI10_AI17 = r"^01(?P<gtin14>\d{14})21(?P<serialNumber>[A-Za-z0-9]{1,20})17(\d{6})10(\d{1,20})$"
+gtin14_AI01_AI21_UNIVERSAL = r"^(\(01\)|01)(?P<gtin14>\d{14})(\(21\)|21)(?P<serialNumber>[A-Za-z0-9]{1,20})(\((d{2})\)|17)?(.)*"
 gtin14_AI01P = r"^\(01\)(?P<gtin14>\d{14})$"
 gtin14_AI01 = r"^01(?P<gtin14>\d{14})$"
 gtin14 = r"(?P<gtin14>\d{14})$"
-gtin_patterns = [gtin_AI01_AI21_UNIVERSAL,
+gtin8 = r"(?P<gtin8>\d{8})$"
+gtin12 = r"(?P<gtin12>\d{12})$"
+gtin13 = r"(?P<gtin13>\d{13})$"
+
+gtin_patterns = [gtin14_AI01_AI21_UNIVERSAL,
                  gtin14_AI01P_AI21P,
                  gtin14_AI01_AI21,
+                 gtin8,
+                 gtin12,
+                 gtin13,
                  gtin14,
                  gtin14_AI01,
                  gtin14_AI01P,
-                 gtin_AI01P_AI21P_AI10P_AI17P,
-                 gtin_AI01_AI21_AI10_AI17,
+                 gtin14_AI01P_AI21P_AI10P_AI17P,
+                 gtin14_AI01_AI21_AI10_AI17,
                  gtin14_AI01_AI21_FIXEDLEN,
                  gtin14_AI01_AI21_VARIABLELEN_PARAMS]
 
-def get_compiled_sgtin_patterns():
+def get_compiled_gtin_patterns():
     '''
     Compiles the patterns defined in gtin_patterns and returns an array
     of regular expression objects.
