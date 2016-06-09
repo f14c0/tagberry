@@ -16,7 +16,7 @@ class GIAI96(EPCNumber):
     def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="GIAI96"
+        self._encoding_type="GIAI96"
     
     def encode(self,companyPrefix,indicatorDigit,itemReference,filter_value,serialNumber=0):
         """
@@ -192,7 +192,7 @@ class GIAI96(EPCNumber):
         
         
         gs1Number = GS1Number()
-        cd = gs1Number._calculateCheckDigit(giai) 
+        cd = gs1Number.calculate_check_digit(giai) 
         
         if(includeAppIdentifier==False):
             gs1 = "%s%s" % (giai,cd)
@@ -206,7 +206,7 @@ class GIAI96(EPCNumber):
         return gs1
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -223,7 +223,7 @@ class GIAI96(EPCNumber):
         return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
             ('Header',self.getFieldValue("Header")),\
             ('Filter',self.getFieldValue("Filter")),\
             ('Partition',self.getFieldValue("Partition")),\

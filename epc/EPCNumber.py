@@ -15,12 +15,12 @@ class EPCNumber(object):
         self._fieldDictionary = FieldDictionary()
         self._bits = None
         self._packStringFormat = ''
-        self._encodingType=''
+        self._encoding_type=''
         self._startSerialNumber = startSerialNumber
         self._numOfSerialNumbers = numOfSerialNumbers
         self._fixedSerialNumberLength = fixedSerialNumberLength
         self._fixedGS1SerialNumberLength = 0
-        self._serialNumber=0
+        self._serial_number=0
     
     class Meta:
         """
@@ -73,9 +73,9 @@ class EPCNumber(object):
         return self._fieldDictionary[fieldName]
     
     
-    def getEncodingType(self):
+    def encoding_type(self):
         '''Returns the Type of EPC Encoding represented by the derivative. eg. SGTIN96, SSCC96 etc'''
-        return self._encodingType
+        return self._encoding_type
     
     
     def getFieldDictionary(self):
@@ -217,7 +217,7 @@ class EPCNumber(object):
         '''
         Returns an urn:epc:idpat
         '''
-        return "urn:epc:idpat:{0}:{1}.{2}.{3}".format(self._encodingType,self.getField("companyPrefix"),args)
+        return "urn:epc:idpat:{0}:{1}.{2}.{3}".format(self._encoding_type,self.getField("companyPrefix"),args)
     
     @abstract
     def toDictionary(self):

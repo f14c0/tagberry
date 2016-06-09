@@ -10,17 +10,17 @@ class SSCC(GS1Number):
         self._serialReference = None
         self._extensionDigit = "0"
         self._sscc18 = ""
-        self._encodingType = "SSCC"
+        self._encoding_type = "SSCC"
         self.hasAIs = False
         
     def encode(self,extensionDigit,serialReference):
             self._applicationIdentifiersList.append("(00)")
             self._serialReference = serialReference
-            self._serialNumber = serialReference
+            self._serial_number = serialReference
             self._extensionDigit = extensionDigit  
-            gs1 = "%s%s%s" % (self._extensionDigit,self._companyPrefix,self._serialReference)
-            self._checkDigit = self._calculateCheckDigit(gs1)
-            gs1 = "(00)%s%s" % (gs1,self._checkDigit)
+            gs1 = "%s%s%s" % (self._extensionDigit,self._company_prefix,self._serialReference)
+            self._check_digit = self.calculate_check_digit(gs1)
+            gs1 = "(00)%s%s" % (gs1,self._check_digit)
                 
             self._gs1 = gs1
             self.parse(self._gs1)
@@ -29,7 +29,7 @@ class SSCC(GS1Number):
     def parse(self,sscc):
         '''The parse() method allows you to parse a valid GS1 SSCC-18 and then have access to its individual fields'''
        
-        if(self.isValid(sscc)):
+        if(self.is_valid(sscc)):
             #store the original sscc
             self._gs1=sscc    
         else:
@@ -50,17 +50,17 @@ class SSCC(GS1Number):
         #remove the last digit an
         if(len(localSSCC)!=18):
             #Calculate Check Digit
-            localSSCC+=str(self._calculateCheckDigit(localSSCC))
+            localSSCC+=str(self.calculate_check_digit(localSSCC))
         self._encodingSize = len(localSSCC)
         self._extensionDigit = localSSCC[:1]
         #step over the Extension Digit to parse on the CP and backoff one to ignore the check digit
-        serialRef = localSSCC[len(self._companyPrefix)+1:len(localSSCC)-1]
+        serialRef = localSSCC[len(self._company_prefix)+1:len(localSSCC)-1]
         self.setSerialReference(serialRef)
             
     def getSerialReference(self):
         return self._serialReference
     def setSerialReference(self,value):
-        self._serialNumber = value
+        self._serial_number = value
         self._serialReference = value
     def getExtensionDigit(self):
         return self._extensionDigit
@@ -104,7 +104,7 @@ class SSCC(GS1Number):
                 
         
     
-    def isValid(self,sscc):
+    def is_valid(self,sscc):
         '''Determines if the SSCC is valid'''
         for pat in sscc_patterns:
             m = re.match(pat,sscc)
@@ -132,7 +132,7 @@ class SSCC(GS1Number):
     
     def getEncodingIdentifier(self):
         '''Returns the Company Prefix. This method is here to preserve polymorphic behavior'''
-        return self._companyPrefix  
+        return self._company_prefix  
     
     def toCoreNumber(self):
         '''Returns the Core Number e.g. GTIN-14, SSCC-18 without the App Identifiers'''

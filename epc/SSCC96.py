@@ -19,7 +19,7 @@ class SSCC96(EPCNumber):
         EPCNumber.__init__(self)
         self._loadFields()
         self._ignoreUpdate=False
-        self._encodingType="SSCC96"
+        self._encoding_type="SSCC96"
         
     def encode(self,companyPrefix,extensionDigit=0,serialReference="0",filter_value=2,reserved=0):
         """
@@ -133,7 +133,7 @@ class SSCC96(EPCNumber):
         return sscc.toSSCC18()
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -243,7 +243,7 @@ class SSCC96(EPCNumber):
         self._ignoreUpdate = False
         self.setFieldValue("SerialReference",value)
         self._ignoreUpdate = True
-    def getSerialNumber(self):
+    def serial_number(self):
         return self.getFieldValue("SerialReference")    
     def _loadFields(self):
         """

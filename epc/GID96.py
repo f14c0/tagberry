@@ -13,7 +13,7 @@ class GID96(EPCNumber):
     def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="GID96"
+        self._encoding_type="GID96"
         
     def encode(self,generalManager,indicatorDigit,objectClass,filter_value,serialNumber=0):
         """
@@ -95,7 +95,7 @@ class GID96(EPCNumber):
         return self
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='GeneralManager' value='%s'/>\n"% (int(self.getFieldValue("GeneralManager")))
@@ -110,7 +110,7 @@ class GID96(EPCNumber):
         return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
                 ('Header',self.getFieldValue("Header")),\
                 ('GeneralManager',int(self.getFieldValue("GeneralManager"))),\
                 ('ObjectClass',int(self.getFieldValue("ObjectClass"))),\
@@ -155,7 +155,7 @@ class GID96(EPCNumber):
     
     def setSerialNumber(self,value):
         self.setFieldValue("SerialNumber",value)
-    def getSerialNumber(self):
+    def serial_number(self):
         self.getFieldValue("SerialNumber")
     
     def _updateBitString(self):

@@ -3,43 +3,42 @@ import unittest
 from epc.EPCFactory import EPCFactory
 from epc.SGTIN96 import SGTIN96
 from utils.Partitions import Partitions  
-#from utils.Utilities import hextobin
-
-
 
 class SGTIN96Test(unittest.TestCase):
-    
+    '''
+    Unit Test for an SGTIN-96
+    '''    
     def setUp(self):
     
         self._sgtin96 = SGTIN96()
-        self._companyPrefix = "035846802"
+        self._company_prefix = "035846802"
         self._itemRef = "339"
         self._indicatorDigit = 1
         self._filter = 3
-        self._serialNumber = 395
+        self._serial_number = 395
     
     def test_encode(self):
         """
         Test that the SGTIN can be encoded using the encode method. 
         """
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
         
         #Check Field Values
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
        
     def test_convert_from_hex(self):
@@ -47,11 +46,11 @@ class SGTIN96Test(unittest.TestCase):
         Test to ensure SGTIN96 can convert from a hex value to an SGTIN96 Instance
         """
         #Create the SGTIN-96
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         #Convert
         hex_val = sgtin96.toHex()
         #Parse Hex through Factory
@@ -62,44 +61,44 @@ class SGTIN96Test(unittest.TestCase):
         
         #Check Fields
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
     def test_from_hex(self):
         
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
         
         #Check Fields
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
        
     def test_parse_binary(self):
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         bin_val = sgtin96.toBinary()
         self.assertEquals(len(bin_val), 96)
         factory = EPCFactory()
@@ -108,19 +107,19 @@ class SGTIN96Test(unittest.TestCase):
         self._checkFields(sgtin96)
     
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
     def test_parse_epc_uri(self):
         
         #TagURI=urn:epc:id:sgtin:0358468.202339.000395
-        epcUri = "urn:epc:id:sgtin:%s.%s.%s" % (str(self._companyPrefix), str(self._indicatorDigit) + str(self._itemRef),str(self._serialNumber))
+        epcUri = "urn:epc:id:sgtin:%s.%s.%s" % (str(self._company_prefix), str(self._indicatorDigit) + str(self._itemRef),str(self._serial_number))
         factory = EPCFactory()
         #Take the URI value and parse it through the factory
         sgtin96 = factory.parse(epcUri)
@@ -130,38 +129,38 @@ class SGTIN96Test(unittest.TestCase):
         
         #Check Fields
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
     def test_parse_tag_uri(self):
         
-        tagUri = "urn:epc:tag:sgtin-96:%s.%s.%s.%s" % (str(self._filter),str(self._companyPrefix), str(self._indicatorDigit) + str(self._itemRef),str(self._serialNumber))
+        tagUri = "urn:epc:tag:sgtin-96:%s.%s.%s.%s" % (str(self._filter),str(self._company_prefix), str(self._indicatorDigit) + str(self._itemRef),str(self._serial_number))
         factory = EPCFactory()
         #Take the Tag URI value and parse it through the factory
         sgtin96 = factory.parse(tagUri)
         #Check Fields
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"), "48")
         self.assertEqual(sgtin96.getFieldValue("Filter"), str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")), str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"), str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"), str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")), int(self._serial_number))
         
     def test_to_epc_tag_uri(self):
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
         tag_uri = sgtin96.toTagURI()
         digits = re.findall('\d+', tag_uri)
@@ -173,28 +172,28 @@ class SGTIN96Test(unittest.TestCase):
         
     def test_ToGS1(self):
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
     def test_ToGS1WithAIInParens(self):
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         gs1 = sgtin96.toGS1(True)
                
     def test_ToGS1WithAIWithoutParens(self):
         
-        sgtin96 =self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 =self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         gs1 = sgtin96.toGS1(False)
          
         
@@ -204,11 +203,11 @@ class SGTIN96Test(unittest.TestCase):
         Test the ability to change the serial number
         """
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
         hex_val = sgtin96.toHex()
         
@@ -226,11 +225,11 @@ class SGTIN96Test(unittest.TestCase):
     
     def test_ChangeFilter(self):
         
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         
         hex_val = sgtin96.toHex()
         
@@ -251,11 +250,11 @@ class SGTIN96Test(unittest.TestCase):
     
     def test_Formats(self):
         #Start with this GTIN-14 20358468023395
-        sgtin96 = self._sgtin96.encode(companyPrefix=self._companyPrefix, 
+        sgtin96 = self._sgtin96.encode(companyPrefix=self._company_prefix, 
                                        indicatorDigit=self._indicatorDigit,
                                        itemReference=self._itemRef,
                                        filter=self._filter, 
-                                       serialNumber=self._serialNumber)
+                                       serialNumber=self._serial_number)
         #Turn the tagpy number into a hex value and parse it through the factory
         hex_val = sgtin96.toHex()
         factory = EPCFactory()
@@ -271,14 +270,14 @@ class SGTIN96Test(unittest.TestCase):
     def _checkFields(self,sgtin96):
         
         partitions = Partitions()
-        partitionValue = partitions.getPartitionValue(len(self._companyPrefix), "SGTIN")
+        partitionValue = partitions.getPartitionValue(len(self._company_prefix), "SGTIN")
         
         self.assertEqual(sgtin96.getFieldValue("Header"),"48")
         self.assertEqual(sgtin96.getFieldValue("Filter"),str(self._filter))
         self.assertEqual(str(sgtin96.getFieldValue("Partition")),str(partitionValue))
-        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"),str(self._companyPrefix))
+        self.assertEqual(sgtin96.getFieldValue("CompanyPrefix"),str(self._company_prefix))
         self.assertEqual(sgtin96.getFieldValue("ItemReference"),str(self._indicatorDigit) + str(self._itemRef))
-        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")),int(self._serialNumber))
+        self.assertEqual(int(sgtin96.getFieldValue("SerialNumber")),int(self._serial_number))
         
         self._checkBitsAndHex(sgtin96)     
         
@@ -304,7 +303,7 @@ class SGTIN96Test(unittest.TestCase):
         cp_length = partitions.getCompanyPrefixBitLength(partitionValue, "SGTIN")
         companyPrefixBits = bits[startPos:startPos+cp_length]
         
-        self.assertEquals(int(companyPrefixBits, 2), int(self._companyPrefix))
+        self.assertEquals(int(companyPrefixBits, 2), int(self._company_prefix))
         
         ir_length = partitions.getItemBitLength(partitionValue, "SGTIN")
         startPos = 14 + cp_length
