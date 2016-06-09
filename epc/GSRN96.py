@@ -12,7 +12,7 @@ class GSRN96(EPCNumber):
         EPCNumber.__init__(self)
         self._loadFields()
         self._ignoreUpdate = False
-        self._encodingType="GSRN-96"
+        self._encoding_type="GSRN-96"
     
     def encode(self, companyPrefix, indicatorDigit, serviceReference, filter_value, reserved=0):
         """
@@ -108,7 +108,7 @@ class GSRN96(EPCNumber):
         
         gdti = self.getFieldValue("CompanyPrefix")+self.getFieldValue("ServiceReference")
         gs1Number = GS1Number()
-        cd = gs1Number._calculateCheckDigit(gdti) 
+        cd = gs1Number.calculate_check_digit(gdti) 
         
         if(includeAppIdentifier==False):
             gs1 = "%s%s" % (gdti,cd)
@@ -120,7 +120,7 @@ class GSRN96(EPCNumber):
         return gs1
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -138,7 +138,7 @@ class GSRN96(EPCNumber):
         return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
                 ('Header',self.getFieldValue("Header")),\
                 ('Filter',self.getFieldValue("Filter")),\
                 ('Partition',self.getFieldValue("Partition")),\
@@ -153,7 +153,7 @@ class GSRN96(EPCNumber):
     
     def setSerialNumber(self,value):
         self.setFieldValue("ServiceReference",value)
-    def getSerialNumber(self):
+    def serial_number(self):
         return self.getFieldValue("ServiceReference")
     
     def setFieldValue(self,fieldName,val):

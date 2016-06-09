@@ -11,8 +11,8 @@ class GLN(GS1Number):
         self._locationReference = None
         self._extension = 0
         self._gln = ""
-        self._encodingType = "GLN"
-        self._checkDigit = 0
+        self._encoding_type = "GLN"
+        self._check_digit = 0
     
     def encode(self,locationReference,extension):
             self._applicationIdentifiersList.append("(254)")
@@ -20,8 +20,8 @@ class GLN(GS1Number):
             self._extension = extension
             self._applicationIdentifiersList.append("(414)")
             
-            gs1 = "%s%s" % (self._companyPrefix,self._locationReference)
-            checkDigit = self._calculateCheckDigit(gs1)
+            gs1 = "%s%s" % (self._company_prefix,self._locationReference)
+            checkDigit = self.calculate_check_digit(gs1)
             if(int(extension)>0):
                 gs1 = "(414)%s%s(254)%s" % (gs1,checkDigit,self.getExtensionNumber())
             else:
@@ -34,7 +34,7 @@ class GLN(GS1Number):
     def parse(self,gln):
         '''The parse() method allows you to parse a valid GS1 GLN and then have access to its individual fields'''
         hasAIs = False
-        if(self.isValid(gln)):
+        if(self.is_valid(gln)):
             #store the original gln
             self._gs1=gln    
         else:
@@ -46,14 +46,14 @@ class GLN(GS1Number):
         #remove the last digit an
         if(len(localGLN)<13):
             #Calculate Check Digit
-            localGLN+=str(self._calculateCheckDigit(localGLN))
+            localGLN+=str(self.calculate_check_digit(localGLN))
         elif(len(localGLN)==13):
             temp = localGLN[0:len(localGLN)-1]
-            self._checkDigit = self._calculateCheckDigit(temp)
-            localGLN = "%s%s" % (temp,self._checkDigit)
+            self._check_digit = self.calculate_check_digit(temp)
+            localGLN = "%s%s" % (temp,self._check_digit)
         self._encodingSize = len(localGLN)
         
-        self._locationReference = localGLN[len(self._companyPrefix):len(localGLN)-1]
+        self._locationReference = localGLN[len(self._company_prefix):len(localGLN)-1]
             
     def getLocationReference(self):
         return self._locationReference
@@ -65,8 +65,8 @@ class GLN(GS1Number):
         self._extension = value
     def getEncodingSize(self):
         return self._encodingSize
-    def getCheckDigit(self):
-        return self._checkDigit
+    def check_digit(self):
+        return self._check_digit
     def _parseAIs(self):
         if(len(self._gs1)<=13):
         #no A1 in this gs1
@@ -109,7 +109,7 @@ class GLN(GS1Number):
                 
         
     
-    def isValid(self,gln):
+    def is_valid(self,gln):
         '''Determines if the GTIN is valid'''
         for pat in gln_patterns:
             m = re.match(pat,gln)
@@ -132,7 +132,7 @@ class GLN(GS1Number):
                 retVal = "414%s254%s" % (self._gln,self._extension)
         else:
             #No AIs Found at parse or encode but...
-            if(self._serialNumber!=None):
+            if(self._serial_number!=None):
                 #if there is a serial number add it to the GTIN with the proper AI
                 if(useParenthesesAroundAIs):
                     #Use Parens

@@ -21,7 +21,7 @@ class GDTI96(EPCNumber):
     def __init__(self, startSerialNumber=0, numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="GDTI96"
+        self._encoding_type="GDTI96"
     
     def encode(self, companyPrefix, documentType, filter_value=None, serialNumber=0):
         """
@@ -132,7 +132,7 @@ class GDTI96(EPCNumber):
     def toGS1(self,useParenthesesAroundAIs=True):
         '''Returns the EPC epc translated to a full GS1 with App Identifiers''' 
         gdti= GDTI(self.getFieldValue("CompanyPrefix"))
-        gdti.encode(self.getFieldValue("DocumentType"), self.getSerialNumber())
+        gdti.encode(self.getFieldValue("DocumentType"), self.serial_number())
         return gdti.toGS1(useParenthesesAroundAIs) 
     
     def toGDTI(self,withSerialNumber=False):
@@ -143,11 +143,11 @@ class GDTI96(EPCNumber):
         The default value for the parameter is False and will not return the serial number with the GDTI
         '''
         gdti = GDTI(self.getFieldValue("CompanyPrefix"))
-        gdti.encode(self.getFieldValue("DocumentType"), self.getSerialNumber())
+        gdti.encode(self.getFieldValue("DocumentType"), self.serial_number())
         return gdti.toGDTI(withSerialNumber)
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -166,7 +166,7 @@ class GDTI96(EPCNumber):
         return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
                 ('Header',self.getFieldValue("Header")),\
                 ('Filter',self.getFieldValue("Filter")),\
                 ('Partition',self.getFieldValue("Partition")),\
@@ -182,7 +182,7 @@ class GDTI96(EPCNumber):
     
     def setSerialNumber(self,value):
         self.setFieldValue("Serial",value)
-    def getSerialNumber(self):
+    def serial_number(self):
         return self.getFieldValue("Serial")
     def toEPCUri(self):
         '''Returns the GDTI-96 in an EPC URI Representation'''

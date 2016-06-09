@@ -22,7 +22,7 @@ class GDTI113(EPCNumber):
     def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="GDTI113"
+        self._encoding_type="GDTI113"
       
     def encode(self,companyPrefix,indicatorDigit,documentType,filter_value,serialNumber=0):
         """
@@ -145,7 +145,7 @@ class GDTI113(EPCNumber):
         
         gdti = self.getFieldValue("CompanyPrefix")+self.getFieldValue("DocumentType")
         gs1Number = GS1Number()
-        cd = gs1Number._calculateCheckDigit(gdti) 
+        cd = gs1Number.calculate_check_digit(gdti) 
         
         if(includeAppIdentifier==False):
             gs1 = "%s%s%s" % (gdti,cd,str(self.getFieldValue("Serial")).zfill(serialNumberLength))
@@ -163,7 +163,7 @@ class GDTI113(EPCNumber):
         return gs1
     
     def toXml(self):
-       xml = "<Tag type='%s'>\n" % (self._encodingType)
+       xml = "<Tag type='%s'>\n" % (self._encoding_type)
        xml += "\t<Fields>\n"
        xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
        xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -181,7 +181,7 @@ class GDTI113(EPCNumber):
        return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
                 ('Header',self.getFieldValue("Header")),\
                 ('Filter',self.getFieldValue("Filter")),\
                 ('Partition',self.getFieldValue("Partition")),\
@@ -196,7 +196,7 @@ class GDTI113(EPCNumber):
     
     def setSerialNumber(self,value):
         self.setFieldValue("Serial",value)
-    def getSerialNumber(self):
+    def serial_number(self):
         return self.getFieldValue("Serial")
     
     def toHex(self):

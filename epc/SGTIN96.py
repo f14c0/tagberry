@@ -30,7 +30,7 @@ class SGTIN96(EPCNumber):
         self._loadFields()
         self._ignoreUpdate = False
         self._fixedSerialNumberLength = fixedSerialNumberLength
-        self._encodingType="SGTIN96"
+        self._encoding_type="SGTIN96"
     
     def encode(self, *args, **kwargs):       
         """
@@ -316,7 +316,7 @@ class SGTIN96(EPCNumber):
         self.setFieldValue('ItemReference', cur, True)
     
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))

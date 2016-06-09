@@ -10,17 +10,17 @@ class GDTI(GS1Number):
         super(self, GS1Number).__init__(self,companyPrefix)
         self._documentType = None
         self._gdti = ""
-        self._serialNumber=""
-        self._encodingType = "GDTI" 
+        self._serial_number=""
+        self._encoding_type = "GDTI" 
     
     def encode(self,documentType,serialNumber):
             self._documentType = documentType
-            self._serialNumber = serialNumber
+            self._serial_number = serialNumber
             
-            gs1 = "%s%s" % (self._companyPrefix,self._documentType)
-            self._checkDigit = self._calculateCheckDigit(gs1)
-            self._gdti = "%s%s" % (gs1,self._checkDigit)
-            self._serialNumber = serialNumber
+            gs1 = "%s%s" % (self._company_prefix,self._documentType)
+            self._check_digit = self.calculate_check_digit(gs1)
+            self._gdti = "%s%s" % (gs1,self._check_digit)
+            self._serial_number = serialNumber
             if(int(serialNumber)>0):
                 gs1 = "(253)%s%s" % (self._gdti,serialNumber)
                 self._gdti = "%s%s" % (self._gdti,serialNumber)
@@ -33,7 +33,7 @@ class GDTI(GS1Number):
     def parse(self,gdti):
         '''The parse() method allows you to parse a valid GS1 DTI and then have access to its individual fields'''
         hasAIs = False
-        if(self.isValid(gdti)):
+        if(self.is_valid(gdti)):
             #store the original gdti
             self._gs1=gdti    
         else:
@@ -43,11 +43,11 @@ class GDTI(GS1Number):
         if(len(self._applicationIdentifiersList)):
             hasAIs = True    
         #finish parsing gdti
-        cpl = len(self._companyPrefix)
+        cpl = len(self._company_prefix)
         dtl = 12-cpl
         self._documentType = self._gdti[cpl:cpl+dtl]
-        self._checkDigit = self._gdti[cpl+dtl:cpl+dtl+1]
-        self._serialNumber = self._gdti[cpl+dtl+1:]
+        self._check_digit = self._gdti[cpl+dtl:cpl+dtl+1]
+        self._serial_number = self._gdti[cpl+dtl+1:]
         
             
     def getDocumentType(self):
@@ -82,7 +82,7 @@ class GDTI(GS1Number):
                 
         
     
-    def isValid(self,gdti):
+    def is_valid(self,gdti):
         '''Determines if the GTIN is valid'''
         for pat in gdti_patterns:
             m = re.match(pat,gdti)
@@ -101,8 +101,8 @@ class GDTI(GS1Number):
         if(withSerialNumber==False):
             return self._gdti
         else:
-            if(self._serialNumber != None):
-                return "%s%s" % (self._gdti,str(self._serialNumber))
+            if(self._serial_number != None):
+                return "%s%s" % (self._gdti,str(self._serial_number))
     
     def toGS1(self,useParenthesesAroundAIs=False,serialNumberLength=0):
         '''Returns a full representation of the GS1 GTIN epc, including AIs with or without, parentheses'''

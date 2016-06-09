@@ -16,11 +16,11 @@ class GRAI96(EPCNumber):
     def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="GRAI96"
+        self._encoding_type="GRAI96"
     
     def setSerialNumber(self,value):
         self.setFieldValue("Serial", value)
-    def getSerialNumber(self):
+    def serial_number(self):
         return self.getFieldValue("Serial")
     
     def encode(self,companyPrefix, assetType, filter_value=0, serialNumber=0):
@@ -180,7 +180,7 @@ class GRAI96(EPCNumber):
         return grai.toGRAI()
         
     def toXml(self):
-        xml = "<Tag type='%s'>\n" % (self._encodingType)
+        xml = "<Tag type='%s'>\n" % (self._encoding_type)
         xml += "\t<Fields>\n"
         xml +=  "\t\t<Field name='Header' value='%s'/>\n" % (self.getFieldValue("Header"))
         xml +=  "\t\t<Field name='Filter' value='%s'/>\n"% (self.getFieldValue("Filter"))
@@ -198,7 +198,7 @@ class GRAI96(EPCNumber):
         return xml;
     
     def toDictionary(self):
-        return dict([('Type',self._encodingType),\
+        return dict([('Type',self._encoding_type),\
                 ('Header',self.getFieldValue("Header")),\
                 ('Filter',self.getFieldValue("Filter")),\
                 ('Partition',self.getFieldValue("Partition")),\

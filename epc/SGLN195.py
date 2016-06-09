@@ -11,7 +11,7 @@ class SGLN195(EPCNumber):
     def __init__(self,startSerialNumber=0,numOfSerialNumbers=0):
         EPCNumber.__init__(self)
         self._loadFields()
-        self._encodingType="SGLN-195"
+        self._encoding_type="SGLN-195"
     def toEPCUri(self):
         '''Returns the SGLN-195 in an EPC URI Representation'''
         if(len(self.getFieldValue("CompanyPrefix"))+len(self.getFieldValue("LocationReference")) != 12):

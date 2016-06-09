@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: tagberry
+Version: 2.0
+Summary: EPC Global/GS1 Encoding Library for Python
+Home-page: https://github.com/csailer/tagberry
+Author: Chuck Sailer
+Author-email: chuck@chucksailer.com
+License: BSD
+Description: Tagberry is a comprehensive Python library for working with EPC Global and GS1 Encodings, such as GTINs, SGTIN-*, SSCC, and all other encodings.
+Keywords: tagberry epcis sgtin gtin sscc sscc-18 tagdata sgln gln grai gs1 epcglobal
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3.4
