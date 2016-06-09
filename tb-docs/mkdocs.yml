@@ -1,0 +1,8 @@
+site_name: ![Berry](img/berry-icon.png)TagBerry&trade;
+pages:
+- Home: index.md
+- Factories: factories.md
+- About: about.md
+
+theme: flatly
+extra_css: [extra.css]

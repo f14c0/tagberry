@@ -16,4 +16,6 @@ TagBerry
      :alt: Requirements Status
 
 TagBerry is a powerfull EPC/GS1 Encoding Library that allows you to encode, decode, and translate all of the GS1 and EPC Global encodings.
+chuck@chucksailer.com
+http://www.chucksailer.com
 
