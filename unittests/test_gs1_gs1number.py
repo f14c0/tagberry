@@ -67,7 +67,52 @@ class GS1NumberTest(unittest.TestCase):
         exception_raised = cm.exception 
         self.assertIsInstance(exception_raised, NotImplementedError, "Incorrect exception raised from GS1Number.is_valid")
             
-
-
+    def test_to_epc(self):
+        '''
+        Test the abstract to_epc method to ensure it raises a NotImplementedError when not implemented.
+        '''
+        gs1 = GS1Number()
+         
+        with self.assertRaises(NotImplementedError) as cm:
+            gs1.to_epc()
+        exception_raised = cm.exception 
+        self.assertIsInstance(exception_raised, NotImplementedError, "Incorrect exception raised from GS1Number.test_to_epc")
+    
+    def test_get_app_identifiers(self):
+        '''
+        Test the abstract get_app_identifiers method to ensure it raises a NotImplementedError when not implemented.
+        '''
+        gs1 = GS1Number()
+         
+        with self.assertRaises(NotImplementedError) as cm:
+            gs1.get_app_identifiers()
+        exception_raised = cm.exception 
+        self.assertIsInstance(exception_raised, NotImplementedError, "Incorrect exception raised from GS1Number.test_get_app_identifiers")
+        
+    def test_to_base_number(self):
+        '''
+        Test the abstract to_base_number method to ensure it raises a NotImplementedError when not implemented.
+        '''
+        gs1 = GS1Number()
+         
+        with self.assertRaises(NotImplementedError) as cm:
+            gs1.to_base_number()
+        exception_raised = cm.exception 
+        self.assertIsInstance(exception_raised, NotImplementedError, "Incorrect exception raised from GS1Number.to_base_number")
+    
+    def test_calculate_check_digit(self):
+        '''
+        Tests the check digit calculation
+        '''
+        data = "1234567890123"
+        gs1 = GS1Number()
+        check_digit = gs1.calculate_check_digit(data)
+        self.assertEqual(check_digit, 1, "The Check digit should have been 1. Instead the check digit was %s" % check_digit)
+        
+        data = "4900012309874"
+        check_digit = gs1.calculate_check_digit(data)
+        self.assertEqual(check_digit, 7, "The Check digit should have been 7. Instead the check digit was %s" % check_digit)
+        
+        
 if __name__ == '__main__':
     unittest.main()

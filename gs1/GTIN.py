@@ -38,7 +38,7 @@ class GTIN(GS1Number):
 			self._gs1 = gs1
 			self.parse(self._gs1)
 			
-	def toCoreNumber(self):
+	def to_base_number(self):
 		'''Returns the Core Number e.g. GTIN-14, SSCC-18 without the App Identifiers'''
 		return self._gtin14
 	

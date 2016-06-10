@@ -134,7 +134,7 @@ class SSCC(GS1Number):
         '''Returns the Company Prefix. This method is here to preserve polymorphic behavior'''
         return self._company_prefix  
     
-    def toCoreNumber(self):
+    def to_base_number(self):
         '''Returns the Core Number e.g. GTIN-14, SSCC-18 without the App Identifiers'''
         return self._sscc18     
     

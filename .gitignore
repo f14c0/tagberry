@@ -3,3 +3,9 @@ TDS_1_9_Standard.pdf
 NoseTestTools [Builder].launch
 .externalToolBuilders
 tb-docs/site
+gs1/__pycache__/GRAI.cpython-34.pyc
+gs1/__pycache__/GS1Number.cpython-34.pyc
+gs1/__pycache__/GTIN.cpython-34.pyc
+gs1/__pycache__/Patterns.cpython-34.pyc
+gs1/__pycache__/SSCC.cpython-34.pyc
+epc/__pycache__

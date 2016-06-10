@@ -20,8 +20,6 @@ class GS1Number(object):
         '''
         Meant to be overridden in subclass
         '''    
-       
-    
     @property 
     def serial_number(self):
         '''
@@ -62,30 +60,37 @@ class GS1Number(object):
     def is_valid(self, gs1):
         '''Determines if this is a valid GS-1 Encoding'''
     
-    def toGS1(self,useParenthesesAroundAIs=False):
-        '''Returns a full representation of the GS1 epc, including AIs with or without, parentheses'''
-        pass 
-    def getAppIdentifiers(self):
+    @abstract
+    def to_epc(self):
+        '''
+        Returns an EPC Encoding of the same GS1 Encoding.
+        '''
+    
+    @abstract
+    def get_app_identifiers(self):
         '''
         If the GS1 was passed in with parens delimiting AIs then this
-        method will find all app identifiers with in the GS1 Number 
-        and place them in the _applicationIdentifiersList
+        method will find all app identifiers with in the GS1 Number. 
         '''
-        pass
-    
-    def toCoreNumber(self):
-        '''Returns the Core Number e.g. GTIN-14, SSCC-18 without the App Identifiers'''
-        pass
-    
-    def getEncodingIdentifier(self):
-        '''Returns the portion of the epc that identifies the epc most. e.g. Company Prefix,  LocationReference, DocumentType etc'''
-        pass
         
+    @abstract
+    def to_base_number(self):
+        '''Returns the *base* number e.g. GTIN-14, SSCC-18 without the App Identifiers'''
         
-    def calculate_check_digit(self,gs1):
+    def calculate_check_digit(self, gs1):
+        '''
+        Calculates the check digit for a GS1 Encoding
+        
+        Args:
+            gs1 (str) - a GS1 Number without a check digit.
+        
+        Returns:
+            (int): The correct check digit.
+        
+        '''
         total = 0
         m = 1
-        for c in gs1:
+        for c in str(gs1):
             if m == 1:
                 m = 3
             else:
